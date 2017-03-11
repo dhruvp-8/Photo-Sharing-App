@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "A simple photo App",
   "main": "server.js",
+  "engines":{
+   "node": "6.9.2",
+   "npm": "3.10.9"
+   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
@@ -20,6 +24,10 @@
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.1"
   },
+  "repository": {
+   "type": "git",
+   "url": "https://github.com/dhruvp-8/Photo-Sharing-App"
+ },
   "author": "Dhruv Patel",
   "license": "ISC"
 }
