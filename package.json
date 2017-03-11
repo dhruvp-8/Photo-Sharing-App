@@ -1,0 +1,25 @@
+{
+  "name": "photo-app",
+  "version": "1.0.0",
+  "description": "A simple photo App",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "*",
+    "express": "*",
+    "express-session": "^1.15.1",
+    "jsonwebtoken": "^7.3.0",
+    "mongoose": "*",
+    "mongoose-title-case": "0.0.4",
+    "mongoose-validator": "^1.2.5",
+    "morgan": "^1.8.1",
+    "multer": "^1.3.0",
+    "passport": "^0.3.2",
+    "passport-facebook": "^2.1.1"
+  },
+  "author": "Dhruv Patel",
+  "license": "ISC"
+}

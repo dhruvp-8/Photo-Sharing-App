@@ -1,0 +1,64 @@
+<div class="page-header">
+    <h2 class="text-center">User Login</h2>
+</div>
+
+
+<div class="jumbotron text-center" ng-show="main.loading">
+    <span class="glyphicon glyphicon-repeat spinner"></span>
+    <p>Loading...</p>
+</div>
+
+<br>
+
+<div class="row show-hide-message" ng-show="main.successMsg">
+    <div class="alert alert-success">
+        {{ main.successMsg }}
+    </div>
+</div>
+
+<div class="row show-hide-message" ng-show="main.errorMsg">
+    <div class="alert alert-danger">
+        {{ main.errorMsg }}
+    </div>
+</div>
+
+<div class="row show-hide-message" ng-show="facebook.errorMsg">
+    <div class="alert alert-danger">
+        {{ facebook.errorMsg }}
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="col-md-2">
+        <label class="font-bold" style="color:purple;">*Required Field</label>
+    </div>
+    <div class="col-md-6"></div>
+</div>
+<br><br><br>
+
+<form ng-submit="main.doLogin(loginData)">
+
+    <div class="form-group">
+        <label class="font-bold col-md-2 control-label">*Username:</label>
+        <div class="col-md-4">
+            <input type="text" class="form-control" name="username" ng-model="main.loginData.username">
+        </div>
+        <br><br><br>
+    </div>
+
+    <div class="form-group">
+        <label class="font-bold col-md-2 control-label">*Password:</label>
+        <div class="col-md-4">
+            <input type="password" class="form-control" name="password" ng-model="main.loginData.password">
+        </div>
+        <br><br>
+    </div>
+    <div class="form-group">
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-group-justified btn-md btn-success">Sign In</button><br>
+            <button type="button" ng-click="main.facebook()" class="btn btn-facebook btn-group-justified btn-md btn-primary">Sign In with Facebook</button></a>
+        </div>
+    </div>
+
+</form>
+<br>
