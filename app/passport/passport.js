@@ -25,14 +25,15 @@ module.exports = function(app, passport){
         clientID: '378534625855609',
         clientSecret: 'eb9b5ac04b6d88e003290c3e26df11f3',
         callbackURL: "http://localhost:3000/auth/facebook/callback",
-        profileFields: ['id', 'displayName', 'photos', 'emails']
+        profileFields: ['id', 'displayName', 'photos', 'email']
   },
   function(accessToken, refreshToken, profile, done) {
     console.log(profile._json.email);
-    User.findOne({ email: profile._json.email }).select('username password email name').exec(function(err, user){
+    User.findOne({ email: profile._json.email }).select('username password email name prof_photo').exec(function(err, user){
         if(err) done(err);
 
         if(user && user != null){
+            console.log(user);
             done(null, user);
         }
         else{

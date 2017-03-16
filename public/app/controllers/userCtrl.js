@@ -71,19 +71,30 @@ angular.module('userControllers',['userServices','authServices'])
     };
 })
 
-.controller('searchCtrl', function($http,$scope){
+/*.controller('searchCtrl', function($http,$scope,$route){
     var app = this;
+    //app.marker = false;
     $http.get('/api/search').then(function(data){
         $scope.users = [];
         $scope.users = data;
         app.checker = false;
-        console.log($scope.users);
     });
 
     $scope.displayer = function(){
         app.checker = true;
     }
-})
+
+    $scope.requestFollow = function(inid,oid){
+        var reqid = {incoming: inid, outgoing: oid};
+        $http.post('/api/request',reqid).then(function(data){
+            $scope.success = data.data.success;
+            if($scope.success == true){
+                $route.reload();
+
+            }
+        });
+    }
+})*/
 
 
 .directive('match', function(){

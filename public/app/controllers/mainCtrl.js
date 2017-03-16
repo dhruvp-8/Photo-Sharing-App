@@ -1,20 +1,116 @@
-angular.module('mainController',['authServices','fileModelDirective','uploadFileService'])
+angular.module('mainController',['authServices','fileModelDirective','uploadFileService','userServices'])
 
-.controller('mainCtrl', function(Auth,$timeout,$location,$rootScope,$window,$scope,uploadFile){
+.controller('mainCtrl', function(Auth,$timeout,$location,$rootScope,$window,$scope,uploadFile,$interval,$route,User,AuthToken){
     var app = this;
     app.loadme = false;
-    app.prof_photo = 'nothing';
+    //app.prof_photo = 'nothing';
+    app.checkSession = function(){
+        if(Auth.isLoggedIn()){
+            app.checkingSession = true;
+            var interval = $interval(function(){
+                var token = $window.localStorage.getItem('token');
+                if(token === null){
+                    $interval.cancel(interval);
+                }
+                else{
+                    self.parseJwt = function(token){
+                        var base64Url = token.split('.')[1];
+                        var base64 = base64Url.replace('-','+').replace('_','/');
+                        return JSON.parse($window.atob(base64));
+                    };
+                    var expireTime = self.parseJwt(token);
+                    var timeStamp = Math.floor(Date.now() / 1000);
+                    console.log(expireTime.exp,timeStamp);
+                    var timeCheck = expireTime.exp - timeStamp;
+                    console.log('timeCheck:'+ timeCheck);
+                    if(timeCheck <= 0){
+                        console.log('token has expired');
+                        showModal(1);
+                        $interval.cancel(interval);
+                    }
+                    else{
+                        console.log('token has not yet expired');
+                    }
+                }
+            },2000);
+        }
+    };
+
+    app.checkSession();
+
+    var showModal = function(option){
+        app.choiceMade = false;
+
+        app.modalHeader = undefined;
+        app.modalBody = undefined; 
+        app.hideButton = false;
+        if(option === 1){
+
+            app.modalHeader = 'Timeout Warning';
+            app.modalBody = 'Your session will expire in 5 minutes. Would you like to renew session?';  
+            $('#ourModal').modal({ backdrop: "static" });
+
+        }else if(option === 2){
+            app.hideButton = true;
+            app.modalHeader = 'Logging Out';
+            $('#ourModal').modal({ backdrop: "static" });
+            $timeout(function(){
+                Auth.logout();
+                $location.path('/');
+                hideModal();
+                $route.reload();
+            },2000);
+
+        }
+        $timeout(function(){
+                if(!app.choiceMade){
+                    hideModal();
+                }
+            },40000);
+    };
+
+    app.renewSession = function(){
+        app.choiceMade = true;
+        console.log('123');
+        User.renewSession(app.username).then(function(data){
+           if(data.data.success){
+                AuthToken.setToken(data.data.token);
+                app.checkSession();
+           } 
+           else{
+               app.modalBody = data.data.message;
+           }
+        });
+        hideModal();
+    };
+
+    app.endSession = function(){
+        app.choiceMade = true;
+        $timeout(function(){
+            showModal(2); 
+        },1000);
+        hideModal();
+    };
+
+    var hideModal = function(){
+        $('#ourModal').modal('hide');
+    };
+
+
     var usrname;
     $rootScope.$on('$routeChangeStart', function(){
+        if(!app.checkSession){
+            app.checkSession();
+        }
         if(Auth.isLoggedIn()){
             app.isLoggedIn = true;
             Auth.getUser().then(function(data){
+                app.id = data.data._id;
                 app.name = data.data.name;
                 app.username = data.data.username;
                 usrname = app.username;
                 app.email = data.data.email;
                 app.prof_photo =  'assets/uploads/' + data.data.prof_photo;
-                console.log(app.prof_photo);
                 app.loadme = true;
             });
         }
@@ -45,6 +141,7 @@ angular.module('mainController',['authServices','fileModelDirective','uploadFile
                     $location.path('/about');
                     app.loginData = '';
                     app.successMsg = false;
+                    app.checkSession();
                 },2000);
             }
             else{
@@ -55,16 +152,11 @@ angular.module('mainController',['authServices','fileModelDirective','uploadFile
     };
 
     this.openModal = function(){
-        console.log("123");
         $('#myModal').modal('show');
     };
 
-    this.logout = function(){
-        Auth.logout();
-        $location.path('/logout');
-        $timeout(function(){
-            $location.path('/');
-        },100);
+    app.logout = function(){
+        showModal(2);
     };
 
 
@@ -116,5 +208,13 @@ angular.module('mainController',['authServices','fileModelDirective','uploadFile
             }
 
         };
+
+        /*this.showProf = function(user){
+            app.openModal();
+            app.uname = user.username;
+            app.em = user.email;
+            app.nm = user.name;
+            app.prof_pic = 'assets/uploads/' + user.prof_photo;
+        };*/
 
 });

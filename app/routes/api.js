@@ -114,7 +114,7 @@ module.exports = function(router) {
                 if (!validPassword) {
                         res.json({ success: false, message: 'Could not authenticate password' }); // Password does not match password in database
                 }else {
-                        var token = jwt.sign({ username: user.username, email: user.email,name: user.name, prof_photo: user.prof_photo}, secret, { expiresIn: '24h' }); // Logged in: Give user token
+                        var token = jwt.sign({ username: user.username, email: user.email,name: user.name, prof_photo: user.prof_photo}, secret, { expiresIn: '30m' }); // Logged in: Give user token
                         res.json({ success: true, message: 'User authenticated!', token: token }); // Return token in JSON object to controller
                 }
             }
@@ -154,18 +154,6 @@ router.post('/upload', function (req, res) {
     });
 });
 
-router.get('/search', function(req, res) {
-  User.find({}, function(err, users) {
-    var userMap = [];
-
-    users.forEach(function(user) {
-      userMap.push(user);
-    });
-
-    res.json(userMap);
-  });
-});
-
 
     // Middleware for Routes that checks for token - Place all routes after this route that require the user to already be logged in
     router.use(function(req, res, next) {
@@ -191,6 +179,49 @@ router.get('/search', function(req, res) {
     router.post('/me', function(req, res) {
         res.send(req.decoded); // Return the token acquired from middleware
     });
+
+     router.get('/renewToken/:username', function(req,res){
+        User.findOne({ username: req.params.username }).select().exec(function(err, user){
+            if(err) throw err;
+            if(!user){
+                res.json({ success: false, message: 'No User was found' });
+            }
+            else{
+                var newToken = jwt.sign({ username: user.username, email: user.email,name: user.name, prof_photo: user.prof_photo}, secret, { expiresIn: '24h' }); // Logged in: Give user token
+                res.json({ success: true, token: newToken }); // Return token in JSON object to controller 
+            }
+        });
+     });
+
+    /*router.get('/search', function(req, res) {
+      User.find({}, function(err, users) {
+        var userMap = [];
+
+        users.forEach(function(user) {
+            userMap.push(user);
+        });
+
+        res.json(userMap);
+      });
+  });*/
+
+    /*router.post('/request', function(req,res){
+        var incoming = req.body.incoming;
+        var outgoing = req.body.outgoing;
+        User.findByIdAndUpdate(incoming, {$push: {"incomingreq": {rid: outgoing,flag: true}}},{safe: true, upsert: true}).exec(function(err, doc) {
+            if(err) throw err;
+
+            doc.save();
+        });
+        User.findByIdAndUpdate(outgoing,{$push: {"outgoingreq": {rid: incoming,flag:true}}},{safe: true, upsert: true}).exec(function(err, doc) {
+            if(err) throw err;
+
+            doc.save();
+        });
+
+        res.json({success: true});
+
+    });*/
 
     return router; // Return the router object to server
 };
