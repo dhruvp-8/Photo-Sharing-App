@@ -17,7 +17,11 @@ angular.module('userServices',[])
 
     userFactory.renewSession = function(username){
         return $http.get('/api/renewToken/' + username);
-    }
+    };
+
+    userFactory.getPermission = function(){
+        return $http.get('/api/permission');
+    };
 
     return userFactory;
 });

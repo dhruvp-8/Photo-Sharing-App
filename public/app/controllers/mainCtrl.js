@@ -20,16 +20,16 @@ angular.module('mainController',['authServices','fileModelDirective','uploadFile
                     };
                     var expireTime = self.parseJwt(token);
                     var timeStamp = Math.floor(Date.now() / 1000);
-                    console.log(expireTime.exp,timeStamp);
+                    //console.log(expireTime.exp,timeStamp);
                     var timeCheck = expireTime.exp - timeStamp;
-                    console.log('timeCheck:'+ timeCheck);
+                    //console.log('timeCheck:'+ timeCheck);
                     if(timeCheck <= 0){
-                        console.log('token has expired');
+                        //console.log('token has expired');
                         showModal(1);
                         $interval.cancel(interval);
                     }
                     else{
-                        console.log('token has not yet expired');
+                        //console.log('token has not yet expired');
                     }
                 }
             },2000);
@@ -42,12 +42,12 @@ angular.module('mainController',['authServices','fileModelDirective','uploadFile
         app.choiceMade = false;
 
         app.modalHeader = undefined;
-        app.modalBody = undefined; 
+        app.modalBody = undefined;
         app.hideButton = false;
         if(option === 1){
 
             app.modalHeader = 'Timeout Warning';
-            app.modalBody = 'Your session will expire in 5 minutes. Would you like to renew session?';  
+            app.modalBody = 'Your session will expire in 5 minutes. Would you like to renew session?';
             $('#ourModal').modal({ backdrop: "static" });
 
         }else if(option === 2){
@@ -71,12 +71,12 @@ angular.module('mainController',['authServices','fileModelDirective','uploadFile
 
     app.renewSession = function(){
         app.choiceMade = true;
-        console.log('123');
+        //console.log('123');
         User.renewSession(app.username).then(function(data){
            if(data.data.success){
                 AuthToken.setToken(data.data.token);
                 app.checkSession();
-           } 
+           }
            else{
                app.modalBody = data.data.message;
            }
@@ -87,7 +87,7 @@ angular.module('mainController',['authServices','fileModelDirective','uploadFile
     app.endSession = function(){
         app.choiceMade = true;
         $timeout(function(){
-            showModal(2); 
+            showModal(2);
         },1000);
         hideModal();
     };
@@ -111,7 +111,15 @@ angular.module('mainController',['authServices','fileModelDirective','uploadFile
                 usrname = app.username;
                 app.email = data.data.email;
                 app.prof_photo =  'assets/uploads/' + data.data.prof_photo;
-                app.loadme = true;
+
+                User.getPermission().then(function(data){
+                    if(data.data.permission === 'admin' || data.data.permission === 'moderator'){
+                        app.authorized = true;
+                        app.loadme = true;
+                    }else{
+                        app.loadme = true;
+                    }
+                });
             });
         }
         else {

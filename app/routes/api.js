@@ -188,7 +188,19 @@ router.post('/upload', function (req, res) {
             }
             else{
                 var newToken = jwt.sign({ username: user.username, email: user.email,name: user.name, prof_photo: user.prof_photo}, secret, { expiresIn: '24h' }); // Logged in: Give user token
-                res.json({ success: true, token: newToken }); // Return token in JSON object to controller 
+                res.json({ success: true, token: newToken }); // Return token in JSON object to controller
+            }
+        });
+     });
+
+     router.get('/permission', function(req, res){
+        User.findOne({ username: req.decoded.username }, function(err, user){
+            if(err) throw err;
+            if(!user){
+                res.json({ success: false, message:'No User was found' });
+            }
+            else{
+                res.json({ success:true, permission: user.permission });
             }
         });
      });

@@ -59,7 +59,8 @@ var UserSchema = new Schema({
     username: {type: String, lowercase: true, required:true, unique: true, validate: usernameValidator },
     password :{type: String, required: true, validate: passwordValidator},
     email: {type: String, lowercase: true, required:true, unique: true , validate: emailValidator},
-    prof_photo: { type:String, default:'default.png' }
+    prof_photo: { type: String, default:'default.png' },
+    permission: { type: String, required: true, default: 'user'}
 });
 
 
