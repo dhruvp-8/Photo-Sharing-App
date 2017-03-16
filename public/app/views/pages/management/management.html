@@ -1,3 +1,82 @@
 <div class="page-header">
-    Management Route
+    <h2 class="text-center">User Management</h2>
 </div>
+
+<br>
+
+<div class="jumbotron text-center" ng-show="management.loading">
+    <span class="glyphicon glyphicon-repeat spinner"></span>
+    <p>Loading...</p>
+</div>
+
+<br>
+
+<button type="button" ng-click="management.showMore(number);" class="btn btn-primary">Apply Filter</button>
+<button type="button" ng-click="management.showAll();"class="btn btn-warning">Show All</button>
+<div class="showmore">
+    <div class="col-md-3">
+        <div class="input-group">
+            <span class="input-group-addon"><strong>Results to Display:</strong></span>
+            <input type="text" class="form-control" ng-model="number">
+        </div>
+    </div>
+</div>
+<br /><br />
+
+<div class="row show-hide-message" ng-show="management.showMoreError">
+    <div class="alert alert-danger">
+        {{ management.showMoreError }}
+    </div>
+</div>
+<br/><br/>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <center><strong>User Management</strong><center>
+    </div>
+    <table class="table">
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Email</th>
+        </tr>
+        <tr ng-repeat="person in management.users | limitTo: management.limit">
+            <td><img ng-src="{{person.prof_photo}}" class="img-circle changer"></td>
+            <td>{{person.name}}</td>
+            <td>{{person.username}}</td>
+            <td>{{person.email}}</td>
+            <td>
+                <a href="#">
+                    <button type="button" ng-show="management.editAccess" class="btn btn-success">Edit</button>
+                    <button type="button" ng-show="management.deleteAccess" class="btn btn-danger">Delete</button>
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="row show-hide-message" ng-show="main.successMsg">
+    <div class="alert alert-success">
+        {{ management.successMsg }}
+    </div>
+</div>
+
+<div class="row show-hide-message" ng-show="main.errorMsg">
+    <div class="alert alert-danger">
+        {{ management.errorMsg }}
+    </div>
+</div>
+
+<br><br>
+<button type="button" ng-click="management.showMore(number);" class="btn btn-primary">Apply Filter</button>
+<button type="button" ng-click="management.showAll();"class="btn btn-warning">Show All</button>
+<div class="showmore">
+    <div class="col-md-3">
+        <div class="input-group">
+            <span class="input-group-addon"><strong>Results to Display:</strong></span>
+            <input type="text" class="form-control" ng-model="number">
+        </div>
+    </div>
+</div>
+<br /><br />

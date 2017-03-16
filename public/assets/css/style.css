@@ -6,6 +6,9 @@ main{
     padding-top: 30px;
 }
 
+.showmore{
+    display: inline;   
+}
 
 .dizzy-gillespie {
     filter: saturate(3);
@@ -134,5 +137,3 @@ header .navbar{
 .table-borderless tfoot tr td {
     border: none;
 }
-
-

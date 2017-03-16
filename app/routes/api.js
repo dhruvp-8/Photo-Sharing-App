@@ -154,7 +154,6 @@ router.post('/upload', function (req, res) {
     });
 });
 
-
     // Middleware for Routes that checks for token - Place all routes after this route that require the user to already be logged in
     router.use(function(req, res, next) {
         var token = req.body.token || req.body.query || req.headers['x-access-token']; // Check for token in body, URL, or headers
@@ -204,6 +203,33 @@ router.post('/upload', function (req, res) {
             }
         });
      });
+
+     router.get('/management', function(req, res){
+        User.find({}, function(err, users){
+            if(err) throw err;
+
+            User.findOne({ username: req.decoded.username }, function(err, mainUser){
+                if(err) throw err;
+
+                if(!mainUser){
+                    res.json({ success:false, message: 'No User Found' });
+                }else{
+                    if(mainUser.permission === 'admin' || mainUser.permission === 'moderator'){
+                        if(!users){
+                            res.json({ success:false, message:'Users not found' });
+                        }else{
+                            res.json({ success:true, users: users, permission: mainUser.permission });
+                        }
+                    }
+                    else{
+                        res.json({ success: false, message: 'Insufficient Permissions' });
+                    }
+                }
+            });
+        });
+     });
+
+
 
     /*router.get('/search', function(req, res) {
       User.find({}, function(err, users) {
