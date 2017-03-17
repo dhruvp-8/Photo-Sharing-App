@@ -1,0 +1,112 @@
+<div class="page-header">
+    <h2 class="text-center">Search Engine</h2>
+</div>
+
+<br>
+
+<div class="row show-hide-message" ng-show="management.showMoreError">
+    <div class="alert alert-danger">
+        {{ management.showMoreError }}
+    </div>
+</div>
+
+<div class="jumbotron text-center" ng-show="management.loading">
+    <span class="glyphicon glyphicon-repeat spinner"></span>
+    <p>Loading...</p>
+</div>
+
+<br><br>
+
+<div class="showmore">
+    <div class="input-group">
+        <span class="input-group-addon"><strong>Search By:</strong></span>
+        <div class="col-md-3">
+            <input type="text" name="searchByUsername" ng-model="searchByUsername">
+        </div>
+        <div class="col-md-5">
+            <button type="button" name="button" class="btn btn-default">Username</button>
+        </div>
+    </div>
+</div>
+<br>
+<div class="showmore">
+    <div class="input-group">
+        <span class="input-group-addon"><strong>Search By:</strong></span>
+        <div class="col-md-3">
+            <input type="text" name="searchByEmail"  ng-model="searchByEmail">
+        </div>
+        <div class="col-md-5">
+            <button type="button" name="button" class="btn btn-default">Email</button>
+        </div>
+    </div>
+</div>
+<br>
+<div class="showmore">
+    <div class="input-group">
+        <span class="input-group-addon"><strong>Search By:</strong></span>
+        <div class="col-md-3">
+            <input type="text" name="searchByName" ng-model="searchByName">
+        </div>
+        <div class="col-md-5">
+            <button type="button" name="button" class="btn btn-default">Name</button>
+        </div>
+    </div>
+</div>
+<br>
+
+
+<div class="navbar-form">
+    <button type="button" name="button" ng-click="management.advancedSearch(searchByUsername,searchByEmail,searchByName);" class="btn btn-success">Search</button>
+    <div class="btn-group">
+        <button type="button" name="button" class="btn btn-danger">Sort By</button>
+        <button type="button" name="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a href="#" ng-click="management.sortOrder('username');">Username</a></li>
+            <li><a href="#" ng-click="management.sortOrder('email');">Email</a></li>
+            <li><a href="#" ng-click="management.sortOrder('name');">Name</a></li>
+        </ul>
+    </div>
+
+</div>
+
+<br>
+<div class="row">
+    <div class="col-md-3">
+        <div ng-show="management.searchLimit === undefined" class="alert alert-success">
+            <p><strong>Results:&nbsp;&nbsp;</strong>{{ (management.users | filter: advancedSearchFilter | limitTo: management.searchLimit ).length }}</p>
+        </div>
+        <div ng-show="management.sort" class="well">
+            <p><strong>Sorted By:&nbsp;&nbsp;</strong>{{ management.sort }}</p>
+        </div>
+    </div>
+</div>
+
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <center><strong>User Management</strong><center>
+    </div>
+    <table class="table">
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Email</th>
+        </tr>
+        <tr ng-repeat="person in management.users | filter: advancedSearchFilter | limitTo: management.searchLimit | orderBy: management.sort">
+            <td><img ng-src="{{person.prof_photo}}" class="img-circle changer"></td>
+            <td>{{person.name}}</td>
+            <td>{{person.username}}</td>
+            <td>{{person.email}}</td>
+            <td>
+                <a href="/edit/{{person._id}}">
+                    <button type="button" ng-show="management.editAccess" class="btn btn-success">Edit</button>
+                </a>
+                    <button type="button" ng-click="management.deleteUser(person.username);" ng-show="management.deleteAccess" class="btn btn-danger">Delete</button>
+            </td>
+        </tr>
+    </table>
+</div>

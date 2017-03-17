@@ -1,6 +1,6 @@
 angular.module('managementController', [])
 
-.controller('managementCtrl', function(User){
+.controller('managementCtrl', function(User,$scope){
 
     var app = this;
 
@@ -10,6 +10,7 @@ angular.module('managementController', [])
     app.editAccess = false;
     app.deleteAccess = false;
     app.limit = 5;
+    app.searchLimit = 0;
 
     function getUsers(){
         User.getUsers().then(function(data){
@@ -67,6 +68,54 @@ angular.module('managementController', [])
             }
         });
     };
+
+
+        app.search = function(searchKeyword, number){
+            app.showMoreError = false;
+            if(searchKeyword){
+                if(searchKeyword.length > 0){
+                    app.limit = 0;
+                    $scope.searchFilter = searchKeyword;
+                    app.limit = number;
+                }
+                else{
+                    $scope.searchFilter = undefined;
+                    app.limit = 0;
+                }
+            }
+            else{
+                $scope.searchFilter = undefined;
+                app.limit = 0;
+            }
+        };
+
+        app.clear = function(){
+            $scope.number = 'Clear';
+            app.limit = 0;
+            $scope.searchKeyword = undefined;
+            $scope.searchFilter = undefined;
+            app.showMoreError = false;
+        };
+
+        app.advancedSearch = function(searchByUsername,searchByEmail,searchByName){
+            if(searchByUsername || searchByEmail || searchByName){
+                $scope.advancedSearchFilter = {};
+                if(searchByUsername){
+                    $scope.advancedSearchFilter.username = searchByUsername;
+                }
+                if (searchByEmail) {
+                    $scope.advancedSearchFilter.email = searchByEmail;
+                }
+                if (searchByName) {
+                    $scope.advancedSearchFilter.name = searchByName;
+                }
+                app.searchLimit = undefined;
+            }
+        };
+
+        app.sortOrder = function(order){
+            app.sort = order;
+        };
 })
 
 
@@ -79,6 +128,9 @@ angular.module('managementController', [])
     User.getUser($routeParams.id).then(function(data){
         if(data.data.success){
             $scope.newName = data.data.user.name;
+            $scope.newEmail = data.data.user.email;
+            $scope.newUsername = data.data.user.username;
+            $scope.newPermission = data.data.user.permission;
             app.currentUser = data.data.user._id;
         }else{
             app.errorMsg = data.data.message;
@@ -94,6 +146,7 @@ angular.module('managementController', [])
         app.phase2 = false;
         app.phase3 = false;
         app.phase4 = false;
+        app.errorMsg = false;
     };
 
     app.usernamePhase = function(){
@@ -105,6 +158,7 @@ angular.module('managementController', [])
         app.phase2 = true;
         app.phase3 = false;
         app.phase4 = false;
+        app.errorMsg = false;
     };
 
     app.emailPhase = function(){
@@ -116,6 +170,7 @@ angular.module('managementController', [])
         app.phase2 = false;
         app.phase3 = true;
         app.phase4 = false;
+        app.errorMsg = false;
     };
 
     app.permissionsPhase = function(){
@@ -127,6 +182,19 @@ angular.module('managementController', [])
         app.phase2 = false;
         app.phase3 = false;
         app.phase4 = true;
+        app.errorMsg = false;
+
+        app.disableUser = false;
+        app.disableModerator = false;
+        app.disableAdmin = false;
+
+        if($scope.newPermission === 'user'){
+            app.disableUser = true;
+        }else if ($scope.newPermission === 'moderator') {
+            app.disableModerator = true;
+        }else if ($scope.newPermission === 'admin') {
+            app.disableAdmin = true;
+        }
     };
 
     app.updateName = function(newName, valid){
@@ -158,4 +226,106 @@ angular.module('managementController', [])
             app.disabled = false;
         }
     };
+
+    app.updateEmail = function(newEmail, valid){
+        app.errorMsg = false;
+        app.disabled = true;
+        var userObject = {};
+
+        if(valid){
+            userObject._id = app.currentUser;
+            userObject.email = $scope.newEmail;
+            User.editUser(userObject).then(function(data){
+                if(data.data.success){
+                    app.successMsg = data.data.message;
+                    $timeout(function(){
+                        app.emailForm.email.$setPristine();
+                        app.emailForm.email.$setUntouched();
+                        app.successMsg = false;
+                        app.disabled = false;
+                    },2000);
+                }
+                else{
+                    app.errorMsg = data.data.message;
+                    app.disabled = false;
+                }
+            });
+
+        }else{
+            app.errorMsg = 'Please ensure that form is filled properly!';
+            app.disabled = false;
+        }
+    };
+
+    app.updateUsername = function(newUsername, valid){
+        app.errorMsg = false;
+        app.disabled = true;
+        var userObject = {};
+
+        if(valid){
+            userObject._id = app.currentUser;
+            userObject.username = $scope.newUsername;
+            User.editUser(userObject).then(function(data){
+                if(data.data.success){
+                    app.successMsg = data.data.message;
+                    $timeout(function(){
+                        app.usernameForm.username.$setPristine();
+                        app.usernameForm.username.$setUntouched();
+                        app.successMsg = false;
+                        app.disabled = false;
+                    },2000);
+                }
+                else{
+                    app.errorMsg = data.data.message;
+                    app.disabled = false;
+                }
+            });
+
+        }else{
+            app.errorMsg = 'Please ensure that form is filled properly!';
+            app.disabled = false;
+        }
+    };
+
+    app.updatePermissions = function(newPermission){
+        app.errorMsg = false;
+        app.disableUser = true;
+        app.disableModerator = true;
+        app.disableAdmin = true;
+        var userObject = {};
+
+            userObject._id = app.currentUser;
+            userObject.permission = newPermission;
+            User.editUser(userObject).then(function(data){
+                if(data.data.success){
+                    app.successMsg = data.data.message;
+                    $timeout(function(){
+                        app.successMsg = false;
+
+                        if(newPermission === 'user'){
+                            $scope.newPermission = 'user';
+                            app.disableUser = true;
+                            app.disableModerator = false;
+                            app.disableAdmin = false;
+                        }else if (newPermission === 'moderator') {
+                            $scope.newPermission = 'moderator';
+                            app.disableUser = false;
+                            app.disableModerator = true;
+                            app.disableAdmin = false;
+                        }else if (newPermission === 'admin') {
+                            $scope.newPermission = 'admin';
+                            app.disableUser = false;
+                            app.disableModerator = false;
+                            app.disableAdmin = true;
+                        }
+
+                    },2000);
+                }
+                else{
+                    app.errorMsg = data.data.message;
+                    app.disabled = false;
+                }
+            });
+    };
+
 });

@@ -4,6 +4,12 @@
 
 <br>
 
+<div class="row show-hide-message" ng-show="management.showMoreError">
+    <div class="alert alert-danger">
+        {{ management.showMoreError }}
+    </div>
+</div>
+
 <div class="jumbotron text-center" ng-show="management.loading">
     <span class="glyphicon glyphicon-repeat spinner"></span>
     <p>Loading...</p>
@@ -11,24 +17,49 @@
 
 <br>
 
-<button type="button" ng-click="management.showMore(number);" class="btn btn-primary">Apply Filter</button>
-<button type="button" ng-click="management.showAll();"class="btn btn-warning">Show All</button>
+
 <div class="showmore">
-    <div class="col-md-3">
         <div class="input-group">
             <span class="input-group-addon"><strong>Results to Display:</strong></span>
-            <input type="text" class="form-control" ng-model="number">
+            <div class="col-md-3">
+                <input type="text" class="form-control" ng-model="number">
+            </div>
+            <div class="col-md-3">
+                <button type="button" ng-click="management.showMore(number);" class="btn btn-primary">Apply Filter</button>
+                <button type="button" ng-click="management.showAll();"class="btn btn-warning">Show All</button>
+            </div>
+        </div>
+</div>
+
+<br><br>
+
+<div class="showmore">
+    <div class="input-group">
+        <span class="input-group-addon"><strong>Search For:</strong></span>
+        <div class="col-md-3">
+            <input type="text" name="search" ng-model="searchKeyword">
+        </div>
+        <div class="col-md-5">
+            <button type="button" name="button" ng-click="management.search(searchKeyword, number);" class="btn btn-primary">Search</button>
+            <button type="button" name="button" ng-click="management.clear();" class="btn btn-primary">Clear</button>
+            <a href="/search">
+                <button type="button" name="button" class="btn btn-warning">Advanced Search</button>
+            </a>
         </div>
     </div>
 </div>
-<br /><br />
-
-<div class="row show-hide-message" ng-show="management.showMoreError">
-    <div class="alert alert-danger">
-        {{ management.showMoreError }}
+<br>
+<div class="row">
+    <div class="col-md-3">
+        <div ng-show="searchFilter !== undefined" class="alert alert-success">
+            <p><strong>Total Results:&nbsp;&nbsp;</strong>{{ (management.users | filter: searchFilter).length }}</p>
+            <p><strong>Showing:&nbsp;&nbsp;</strong>{{ (management.users | filter: searchFilter | limitTo: management.limit).length }}</p>
+        </div>
     </div>
 </div>
-<br/><br/>
+
+
+
 
 <div class="panel panel-primary">
     <div class="panel-heading">
@@ -41,7 +72,7 @@
             <th>Username</th>
             <th>Email</th>
         </tr>
-        <tr ng-repeat="person in management.users | limitTo: management.limit">
+        <tr ng-repeat="person in management.users | filter: searchFilter | limitTo: management.limit">
             <td><img ng-src="{{person.prof_photo}}" class="img-circle changer"></td>
             <td>{{person.name}}</td>
             <td>{{person.username}}</td>

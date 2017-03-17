@@ -74,7 +74,7 @@
                 <div ng-class="{ 'has-success':(edit.emailForm.email.$valid && !edit.emailForm.email.$pristine), 'has-error':(!edit.emailForm.email.$valid && !edit.emailForm.email.$pristine) || (!edit.emailForm.email.$valid && edit.emailForm.$submitted) }">
                     <!-- Email Input -->
                     <label>Current Email:</label>
-                    <input ng-disabled="edit.disabled" class="form-control" type="text" name="email"  ng-model="newEmail" ng-minlength="3" ng-maxlength="25" ng-pattern="/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/" required>
+                    <input ng-disabled="edit.disabled" class="form-control" type="text" name="email"  ng-model="newEmail" ng-minlength="3" ng-maxlength="50" ng-pattern="/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/" required>
                     <!-- Email Validation -->
                     <p class="help-block" ng-show="(!edit.emailForm.email.$pristine && edit.emailForm.email.$error.required) || (edit.emailForm.$submitted && edit.emailForm.email.$error.required)">This field is required</p>
                     <span ng-show="edit.checkingEmail && edit.emailForm.email.$valid" class="glyphicon glyphicon-repeat"></span>
