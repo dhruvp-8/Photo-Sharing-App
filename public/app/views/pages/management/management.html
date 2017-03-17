@@ -47,10 +47,10 @@
             <td>{{person.username}}</td>
             <td>{{person.email}}</td>
             <td>
-                <a href="#">
+                <a href="/edit/{{person._id}}">
                     <button type="button" ng-show="management.editAccess" class="btn btn-success">Edit</button>
-                    <button type="button" ng-show="management.deleteAccess" class="btn btn-danger">Delete</button>
                 </a>
+                    <button type="button" ng-click="management.deleteUser(person.username);" ng-show="management.deleteAccess" class="btn btn-danger">Delete</button>
             </td>
         </tr>
     </table>

@@ -52,12 +52,12 @@ var passwordValidator = [
         arguments: [8, 35],
         message: 'Password should be between {ARGS[0]} and {ARGS[1]} characters'
     })
-];
 
+];
 var UserSchema = new Schema({
     name: {type: String, required:true, validate: nameValidator },
     username: {type: String, lowercase: true, required:true, unique: true, validate: usernameValidator },
-    password :{type: String, required: true, validate: passwordValidator},
+    password: {type: String, required: true, validate: passwordValidator, select: false},
     email: {type: String, lowercase: true, required:true, unique: true , validate: emailValidator},
     prof_photo: { type: String, default:'default.png' },
     permission: { type: String, required: true, default: 'user'}
