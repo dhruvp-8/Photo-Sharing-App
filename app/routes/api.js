@@ -82,8 +82,8 @@ module.exports = function(router) {
                       from: 'usermanagement1211@gmail.com',
                       to: user.email,
                       subject: 'User Management Activation Link',
-                      text: 'Hello, ' + user.name + 'Thank You for registering at usermanagement.herokuapp.com.Please click on the link below to complete your activation! https://ums.herokuapp.com/activate/'+ user.temporarytoken,
-                      html: 'Hello, <strong> ' + user.name + '</strong><br><br>Thank You for registering at usermanagement.herokuapp.com.Please click on the link below to complete your activation!<br><br><a href="https://ums.herokuapp.com/activate/' + user.temporarytoken +'">https://ums.herokuapp.com/activate</a> '
+                      text: 'Hello, ' + user.name + 'Thank You for registering at usermanagement.herokuapp.com.Please click on the link below to complete your activation! https://umsbasic.herokuapp.com/activate/'+ user.temporarytoken,
+                      html: 'Hello, <strong> ' + user.name + '</strong><br><br>Thank You for registering at usermanagement.herokuapp.com.Please click on the link below to complete your activation!<br><br><a href="https://umsbasic.herokuapp.com/activate/' + user.temporarytoken +'">https://umsbasic.herokuapp.com/activate</a> '
                     };
 
                     client.sendMail(email, function(err, info){
@@ -276,8 +276,8 @@ module.exports = function(router) {
                       from: 'usermanagement1211@gmail.com',
                       to: user.email,
                       subject: 'User Management Activation Link Request',
-                      text: 'Hello, ' + user.name + 'You recently requested a new account activation link. Please click on the link below to complete your activation! https://ums.herokuapp.com/activate/'+ user.temporarytoken,
-                      html: 'Hello, <strong> ' + user.name + '</strong><br><br>You recently requested a new account activation link. Thank You for registering at usermanagement.herokuapp.com.Please click on the link below to complete your activation!<br><br><a href="https://ums.herokuapp.com/activate/' + user.temporarytoken +'">https://ums.herokuapp.com/activate</a> '
+                      text: 'Hello, ' + user.name + 'You recently requested a new account activation link. Please click on the link below to complete your activation! https://umsbasic.herokuapp.com/activate/'+ user.temporarytoken,
+                      html: 'Hello, <strong> ' + user.name + '</strong><br><br>You recently requested a new account activation link. Thank You for registering at usermanagement.herokuapp.com.Please click on the link below to complete your activation!<br><br><a href="https://umsbasic.herokuapp.com/activate/' + user.temporarytoken +'">https://umsbasic.herokuapp.com/activate</a> '
                     };
 
                     client.sendMail(email, function(err, info){
@@ -357,8 +357,8 @@ module.exports = function(router) {
                           from: 'usermanagement1211@gmail.com',
                           to: user.email,
                           subject: 'User Management Reset Password Request',
-                          text: 'Hello, ' + user.name + 'You recently requested password reset link. Please click on the link below to reset your password: https://ums.herokuapp.com/reset/'+ user.resettoken,
-                          html: 'Hello, <strong> ' + user.name + '</strong><br><br>You recently requested a new account activation link.<br><br>Please click on the link below to reset your password: <br><br><a href="https://ums.herokuapp.com/reset/' + user.resettoken +'">https://ums.herokuapp.com/reset</a>'
+                          text: 'Hello, ' + user.name + 'You recently requested password reset link. Please click on the link below to reset your password: https://umsbasic.herokuapp.com/reset/'+ user.resettoken,
+                          html: 'Hello, <strong> ' + user.name + '</strong><br><br>You recently requested a new account activation link.<br><br>Please click on the link below to reset your password: <br><br><a href="https://umsbasic.herokuapp.com/reset/' + user.resettoken +'">https://umsbasic.herokuapp.com/reset</a>'
                         };
 
                         client.sendMail(email, function(err, info){
