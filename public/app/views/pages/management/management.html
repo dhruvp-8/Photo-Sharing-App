@@ -72,7 +72,7 @@
             <th>Username</th>
             <th>Email</th>
         </tr>
-        <tr ng-repeat="person in management.users | filter: searchFilter | limitTo: management.limit">
+        <tr ng-repeat="person in management.users | filter: searchKeyword | limitTo: management.limit">
             <td><img ng-src="{{person.prof_photo}}" class="img-circle changer"></td>
             <td>{{person.name}}</td>
             <td>{{person.username}}</td>
