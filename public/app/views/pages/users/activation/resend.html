@@ -25,7 +25,7 @@
 
 <div class="form-group">
     <div class="col-md-2">
-        <label class="font-bold" style="color:purple;">*Required Field</label>
+        <label class="font-bold" style="color:red;"><strong>*Required Field</strong></label>
     </div>
     <div class="col-md-6"></div>
 </div>
@@ -34,7 +34,7 @@
 <form ng-submit="resend.checkCredentials(loginData);">
 
     <div class="form-group">
-        <label class="font-bold col-md-2 control-label">*Username:</label>
+        <label class="font-bold col-md-1 control-label"><strong>*Username:</strong></label>
         <div class="col-md-4">
             <input type="text" ng-disabled="resend.disabled" class="form-control" name="username" ng-model="resend.loginData.username">
         </div>
@@ -42,7 +42,7 @@
     </div>
 
     <div class="form-group">
-        <label class="font-bold col-md-2 control-label">*Password:</label>
+        <label class="font-bold col-md-1 control-label"><strong>*Password:</strong></label>
         <div class="col-md-4">
             <input type="password" ng-disabled="resend.disabled" class="form-control" name="password" ng-model="resend.loginData.password">
         </div>

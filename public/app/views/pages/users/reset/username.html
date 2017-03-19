@@ -1,0 +1,42 @@
+<div class="page-header">
+    <h2 class="text-center">Forgot Username</h2>
+</div>
+
+
+<div class="jumbotron text-center" ng-show="username.loading">
+    <span class="glyphicon glyphicon-repeat spinner"></span>
+    <p>Loading...</p>
+</div>
+
+<br>
+
+<div class="row show-hide-message" ng-show="username.successMsg">
+    <div class="alert alert-success">
+        {{ username.successMsg }}
+    </div>
+</div>
+
+<div class="row show-hide-message" ng-show="username.errorMsg">
+    <div class="alert alert-danger">
+        {{ username.errorMsg }}&nbsp;&nbsp;<a href="/resend" ng-show="username.expired"><button type="button" class="btn btn-primary">Resend Activation Link</button></a>
+    </div>
+</div>
+
+<form name="userForm" ng-submit="username.sendUsername(userData,userForm.$valid);" novalidate>
+
+    <div class="form-group">
+        <label class="font-bold col-md-1 control-label"><strong>Email:</strong></label>
+        <div class="col-md-4">
+            <input type="text" ng-disabled="username.disabled || facebook.disabled" class="form-control" name="email" ng-model="username.userData.email" required>
+        </div>
+        <br><br><br>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-group-justified btn-md btn-primary" ng-disabled="username.disabled || facebook.disabled">Submit</button><br>
+        </div>
+    </div>
+
+</form>
+<br>

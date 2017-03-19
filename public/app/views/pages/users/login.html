@@ -30,7 +30,7 @@
 
 <div class="form-group">
     <div class="col-md-2">
-        <label class="font-bold" style="color:purple;">*Required Field</label>
+        <label class="font-bold" style="color:red;"><strong>*Required Field</strong></label>
     </div>
     <div class="col-md-6"></div>
 </div>
@@ -39,7 +39,7 @@
 <form ng-submit="main.doLogin(loginData)">
 
     <div class="form-group">
-        <label class="font-bold col-md-2 control-label">*Username:</label>
+        <label class="font-bold col-md-1 control-label"><strong>*Username:</strong></label>
         <div class="col-md-4">
             <input type="text" ng-disabled="main.disabled || facebook.disabled" class="form-control" name="username" ng-model="main.loginData.username">
         </div>
@@ -47,12 +47,23 @@
     </div>
 
     <div class="form-group">
-        <label class="font-bold col-md-2 control-label">*Password:</label>
+        <label class="font-bold col-md-1 control-label"><strong>*Password:</strong></label>
         <div class="col-md-4">
             <input type="password" ng-disabled="main.disabled || facebook.disabled" class="form-control" name="password" ng-model="main.loginData.password">
         </div>
         <br><br>
     </div>
+
+    <div class="form-group">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-3 col-md-offset-1">
+            <a href="/resetusername" class="text-primary"  ng-disabled="main.disabled || facebook.disabled" >Forgot Username?</a><br><br>
+            <a href="/resetpassword" class="text-primary"  ng-disabled="main.disabled || facebook.disabled" >Forgot Password?</a>
+        </div>
+        <br>
+    </div>
+
     <div class="form-group">
         <div class="col-md-6">
             <button type="submit" class="btn btn-group-justified btn-md btn-success" ng-disabled="main.disabled || facebook.disabled">Sign In</button><br>

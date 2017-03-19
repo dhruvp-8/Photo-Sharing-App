@@ -295,6 +295,150 @@ module.exports = function(router) {
         });
     });
 
+
+    router.get('/resetusername/:email', function(req,res){
+        User.findOne({ email: req.params.email }).select('email name username').exec(function(err,user){
+            if(err){
+                res.json({ success: false, message: err });
+            }
+            else{
+                if(!req.params.email){
+                    res.json({ success: false, message: 'No Email was provided!'  });
+                }
+                else{
+                    if(!user){
+                        res.json({ success: false, message: 'Email was not found!'  });
+                    }else{
+
+                        var email = {
+                          from: 'usermanagement1211@gmail.com',
+                          to: user.email,
+                          subject: 'User Management Username Request',
+                          text: 'Hello, ' + user.name + 'You recently requested your username. Please save it in your files: ' + user.username ,
+                          html: 'Hello, <strong> ' + user.name + '</strong><br><br>You recently requested your username.<br><br> Please save it in your files: &nbsp;<strong>' + user.username + '</strong>'
+                        };
+
+                        client.sendMail(email, function(err, info){
+                            if (err ){
+                              console.log(err);
+                            }
+                            else {
+                              console.log('Message sent: ' + info.response);
+                            }
+                        });
+
+                        res.json({ success:true, message: 'Username has been sent to Registered Email Address!' })
+                    }
+                }
+            }
+
+        });
+    });
+
+
+    router.put('/resetpassword',function(req,res){
+        User.findOne({ username: req.body.username }).select('username active email resettoken name').exec(function(err,user){
+            if(err) throw err;
+
+            if(!user){
+                res.json({ success: false, message: 'Username was not found' });
+            }else if (!user.active) {
+                res.json({ success: false, message: 'Account is not yet activated!' });
+            }
+            else{
+                user.resettoken = jwt.sign({ username: user.username, email: user.email,name: user.name, prof_photo: user.prof_photo}, secret, { expiresIn: '24h' });
+                user.save(function(err){
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+
+                        var email = {
+                          from: 'usermanagement1211@gmail.com',
+                          to: user.email,
+                          subject: 'User Management Reset Password Request',
+                          text: 'Hello, ' + user.name + 'You recently requested password reset link. Please click on the link below to reset your password: http://localhost:3000/reset/'+ user.resettoken,
+                          html: 'Hello, <strong> ' + user.name + '</strong><br><br>You recently requested a new account activation link.<br><br>Please click on the link below to reset your password: <br><br><a href="http://localhost:3000/reset/' + user.resettoken +'">http://localhost:3000/reset</a>'
+                        };
+
+                        client.sendMail(email, function(err, info){
+                            if (err ){
+                              console.log(err);
+                            }
+                            else {
+                              console.log('Message sent: ' + info.response);
+                            }
+                        });
+
+                        res.json({ success:true, message: 'Please check your E-mail for Password Reset Link!' });
+                    }
+                });
+            }
+        });
+    });
+
+    router.get('/resetpassword/:token', function(req,res){
+        User.findOne({ resettoken:  req.params.token }).select().exec(function(err,user){
+            if(err) throw err;
+            var token = req.params.token;
+
+            jwt.verify(token, secret, function(err, decoded) {
+                if (err) {
+                    res.json({ success: false, message: 'Password Link has expired' }); // Token has expired or is invalid
+                } else {
+                    if(!user){
+                        res.json({ success: false, message: 'Password Link has expired.' });
+                    }
+                    else{
+                        res.json({ success: true, user: user });
+                    }
+                }
+            });
+
+        });
+    });
+
+    router.put('/savepassword', function(req,res){
+        User.findOne({ username: req.body.username }).select('username name password resettoken email').exec(function(err,user){
+            if(err) throw err;
+
+            if(req.body.password == null || req.body.password == ''){
+
+                res.json({ success: false, message: 'Password not provided.' });
+            }
+            else{
+                user.password = req.body.password;
+                user.resettoken = false;
+                user.save(function(err){
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+
+                        var email = {
+                          from: 'usermanagement1211@gmail.com',
+                          to: user.email,
+                          subject: 'User Management Password Reset',
+                          text: 'Hello, ' + user.name + 'This email is to notify you that you password has been recently resetted!',
+                          html: 'Hello, <strong> ' + user.name + '</strong><br><br>This email is to notify you that you password has been recently resetted!'
+                        };
+
+                        client.sendMail(email, function(err, info){
+                            if (err ){
+                              console.log(err);
+                            }
+                            else {
+                              console.log('Message sent: ' + info.response);
+                            }
+                        });
+
+                        res.json({ success:true, message: 'Password has been reset!' });
+                    }
+                });
+            }
+        });
+    });
+
     // Middleware for Routes that checks for token - Place all routes after this route that require the user to already be logged in
     router.use(function(req, res, next) {
         var token = req.body.token || req.body.query || req.headers['x-access-token']; // Check for token in body, URL, or headers
