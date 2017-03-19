@@ -60,6 +60,8 @@ var UserSchema = new Schema({
     password: {type: String, required: true, validate: passwordValidator, select: false},
     email: {type: String, lowercase: true, required:true, unique: true , validate: emailValidator},
     prof_photo: { type: String, default:'default.png' },
+    active: { type: Boolean, required: true, default: false},
+    temporarytoken: { type: String, required: true},
     permission: { type: String, required: true, default: 'user'}
 });
 
@@ -67,6 +69,9 @@ var UserSchema = new Schema({
 //Before saving schema perform password hashing using 'pre' middleware
 UserSchema.pre('save', function(next){
     var user = this;
+
+    if(!user.isModified('password')) return next();
+
     bcrypt.hash(user.password, null, null, function(err, hash){
         if(err) return next(err);
         user.password = hash;

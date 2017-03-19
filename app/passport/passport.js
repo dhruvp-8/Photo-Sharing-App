@@ -11,7 +11,12 @@ module.exports = function(app, passport){
     app.use(session({ secret: 'keyboard cat', resave: false , saveUninitialized: true, cookie: { secure: false } }));
 
     passport.serializeUser(function(user, done) {
-        token = jwt.sign({ username: user.username, email: user.email, name: user.name }, secret, {expiresIn: '24h'});
+        if(user.active){
+            token = jwt.sign({ username: user.username, email: user.email, name: user.name }, secret, {expiresIn: '24h'});
+        }
+        else{
+            token = 'inactive/error';
+        }
         done(null, user.id);
     });
 
@@ -29,7 +34,7 @@ module.exports = function(app, passport){
   },
   function(accessToken, refreshToken, profile, done) {
     console.log(profile._json.email);
-    User.findOne({ email: profile._json.email }).select('username password email name prof_photo').exec(function(err, user){
+    User.findOne({ email: profile._json.email }).select('username password email name prof_photo active').exec(function(err, user){
         if(err) done(err);
 
         if(user && user != null){

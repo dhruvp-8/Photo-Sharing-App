@@ -131,7 +131,7 @@ angular.module('mainController',['authServices','fileModelDirective','uploadFile
     });
 
     this.facebook = function(){
-        //console.log("123");
+        app.disabled = true;
         $window.location = $window.location.protocol + '//' + $window.location.host + '/auth/facebook';
     };
 
@@ -140,6 +140,8 @@ angular.module('mainController',['authServices','fileModelDirective','uploadFile
         app.errorMsg = false;
         app.successMsg = false;
         app.loading = true;
+        app.expired = false;
+        app.disabled = true;
 
         Auth.login(app.loginData).then(function(data){
             if(data.data.success){
@@ -153,8 +155,15 @@ angular.module('mainController',['authServices','fileModelDirective','uploadFile
                 },2000);
             }
             else{
-                app.loading = false;
-                app.errorMsg = data.data.message;
+                if(data.data.expired){
+                    app.expired = true;
+                    app.loading = false;
+                    app.errorMsg = data.data.message;
+                }else{
+                    app.disabled = false;
+                    app.loading = false;
+                    app.errorMsg = data.data.message;
+                }
             }
         });
     };

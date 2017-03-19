@@ -8,6 +8,7 @@ angular.module('userControllers',['userServices','authServices'])
         app.errorMsg = false;
         app.successMsg = false;
         app.loading = true;
+        app.disabled = true;
 
         if(valid){
             User.create(app.regData).then(function(data){
@@ -19,12 +20,14 @@ angular.module('userControllers',['userServices','authServices'])
                     },2000);
                 }
                 else{
+                    app.disabled = false;
                     app.loading = false;
                     app.errorMsg = data.data.message;
                 }
             });
         }
         else{
+            app.disabled = false;
             app.loading = false;
             app.errorMsg = 'Please ensure form is filled out properly!';
         }
@@ -134,8 +137,14 @@ angular.module('userControllers',['userServices','authServices'])
 
 .controller('facebookCtrl', function($routeParams,Auth,$location,$window){
     var app = this;
+    app.disabled = true;
+    app.errorMsg = false;
+    app.expired = false;
     if($window.location.pathname == '/facebookerror'){
         app.errorMsg = 'Facebook Email Not Found in Database!';
+    }else if ($window.location.pathname == '/facebook/inactive/error') {
+        app.expired = true;
+        app.errorMsg = 'Account is not yet activated. Please check your email (inside SPAM folder) for activation link.';
     }
     else{
         Auth.facebook($routeParams.token);

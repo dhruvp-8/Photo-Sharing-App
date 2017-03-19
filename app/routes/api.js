@@ -3,6 +3,10 @@ var jwt = require('jsonwebtoken'); // Import JWT Package
 var multer = require('multer');
 var secret = 'harrypotter'; // Create custom secret for use in JWT
 
+var nodemailer = require('nodemailer');
+var sgTransport = require('nodemailer-sendgrid-transport');
+
+
 //Multer storage configs
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -30,6 +34,14 @@ var upload = multer({
 
 module.exports = function(router) {
 
+    var options = {
+      auth: {
+        api_user: 'dhruv16',
+        api_key: 'Dhruv@454'
+      }
+    }
+
+    var client = nodemailer.createTransport(sgTransport(options));
 
     router.post('/users', function(req, res) {
         var user = new User();
@@ -37,6 +49,7 @@ module.exports = function(router) {
         user.password = req.body.password;
         user.email = req.body.email;
         user.name = req.body.name;
+        user.temporarytoken = jwt.sign({ username: user.username, email: user.email,name: user.name, prof_photo: user.prof_photo}, secret, { expiresIn: '24h' });
 
         // Check if request is valid and not empty or null
         if (req.body.username === null || req.body.username === '' || req.body.password === null || req.body.password === '' || req.body.email === null || req.body.email === '' || req.body.name === null || req.body.name === '') {
@@ -64,7 +77,25 @@ module.exports = function(router) {
                         }
                     }
                 } else {
-                    res.json({ success: true, message: 'Account registered!.' }); // Send success message back to controller/request
+
+                    var email = {
+                      from: 'usermanagement1211@gmail.com',
+                      to: user.email,
+                      subject: 'User Management Activation Link',
+                      text: 'Hello, ' + user.name + 'Thank You for registering at usermanagement.herokuapp.com.Please click on the link below to complete your activation! http://localhost:3000/activate/'+ user.temporarytoken,
+                      html: 'Hello, <strong> ' + user.name + '</strong><br><br>Thank You for registering at usermanagement.herokuapp.com.Please click on the link below to complete your activation!<br><br><a href="http://localhost:3000/activate/' + user.temporarytoken +'">http://localhost:3000/activate</a> '
+                    };
+
+                    client.sendMail(email, function(err, info){
+                        if (err ){
+                          console.log(err);
+                        }
+                        else {
+                          console.log('Message sent: ' + info.response);
+                        }
+                    });
+
+                    res.json({ success: true, message: 'Account registered! Please Check your Email for activation link.' }); // Send success message back to controller/request
                 }
             });
         }
@@ -98,7 +129,7 @@ module.exports = function(router) {
 
     // Route for user logins
     router.post('/authenticate', function(req, res) {
-        User.findOne({ username: req.body.username }).select('name email username password prof_photo').exec(function(err, user) {
+        User.findOne({ username: req.body.username }).select('name email username password prof_photo active').exec(function(err, user) {
             if (err) throw err;
 
             if (!user) {
@@ -113,7 +144,10 @@ module.exports = function(router) {
                 }
                 if (!validPassword) {
                         res.json({ success: false, message: 'Could not authenticate password' }); // Password does not match password in database
-                }else {
+                }else if (!user.active) {
+                    res.json({ success: false, message: 'Account is not yet activated. Please check your email (inside SPAM folder) for activation link.', expired: true});
+                }
+                else {
                         var token = jwt.sign({ username: user.username, email: user.email,name: user.name, prof_photo: user.prof_photo}, secret, { expiresIn: '30m' }); // Logged in: Give user token
                         res.json({ success: true, message: 'User authenticated!', token: token }); // Return token in JSON object to controller
                 }
@@ -123,36 +157,143 @@ module.exports = function(router) {
 
 
 
-//Upload Route
-router.post('/upload', function (req, res) {
-  upload(req, res, function (err) {
-    if (err) {
-        if(err.code == 'LIMIT_FILE_SIZE'){
-            res.json({success: false, message: 'File Size is too large. Max limit is 10MB!'});
-        }
-        else if(err.code == 'filetype'){
-            res.json({success: false, message: 'File type is invalid. Must be .png, .jpg, .jpeg!'});
-        }
-        else{
-            console.log(err);
-            res.json({success: false, message: 'File was not able to upload!'});
-        }
-    }
-    else{
-        if(!req.file){
-            res.json({success: false, message: 'No File was selected!'});
+    //Upload Route
+    router.post('/upload', function (req, res) {
+      upload(req, res, function (err) {
+        if (err) {
+            if(err.code == 'LIMIT_FILE_SIZE'){
+                res.json({success: false, message: 'File Size is too large. Max limit is 10MB!'});
+            }
+            else if(err.code == 'filetype'){
+                res.json({success: false, message: 'File type is invalid. Must be .png, .jpg, .jpeg!'});
+            }
+            else{
+                console.log(err);
+                res.json({success: false, message: 'File was not able to upload!'});
+            }
         }
         else{
-            User.findOneAndUpdate({username: req.body.uid},{ prof_photo: req.file.filename }).exec(function(err, doc){
-                if(err) throw err;
-                doc.save();
-            });
-            res.json({success: true, message: 'File was uploaded!', url: req.file.filename});
+            if(!req.file){
+                res.json({success: false, message: 'No File was selected!'});
+            }
+            else{
+                User.findOneAndUpdate({username: req.body.uid},{ prof_photo: req.file.filename }).exec(function(err, doc){
+                    if(err) throw err;
+                    doc.save();
+                });
+                res.json({success: true, message: 'File was uploaded!', url: req.file.filename});
+            }
         }
-    }
 
+        });
     });
-});
+
+    router.put('/activate/:token', function(req,res){
+        User.findOne({ temporarytoken: req.params.token }, function(err,user){
+            if(err) throw err;
+            var token = req.params.token;
+
+
+            jwt.verify(token, secret, function(err, decoded) {
+                if (err) {
+                    res.json({ success: false, message: 'Activation Link has expired!' }); // Token has expired or is invalid
+                } else if(!user) {
+                    res.json({ success: false, message: 'Activation Link has expired!' });
+                }
+                else{
+                    user.temporarytoken = false;
+                    user.active = true;
+                    user.save(function(err){
+                        if(err){
+                            console.log(err);
+                        }
+                        else{
+
+                            var email = {
+                              from: 'usermanagement1211@gmail.com',
+                              to: user.email,
+                              subject: 'User Management Account Activated',
+                              text: 'Hello, ' + user.name + 'Your account has been successfully activated!',
+                              html: 'Hello, <strong> ' + user.name + '</strong><br><br>Your account has been successfully activated!'
+                            };
+
+                            client.sendMail(email, function(err, info){
+                                if (err ){
+                                  console.log(err);
+                                }
+                                else {
+                                  console.log('Message sent: ' + info.response);
+                                }
+                            });
+
+                            res.json({ success: true, message: 'Account Activated!' });
+                        }
+                    });
+                }
+            });
+
+        });
+    });
+
+
+    router.post('/resend', function(req, res) {
+        User.findOne({ username: req.body.username }).select('name email username password prof_photo active').exec(function(err, user) {
+            if (err) throw err;
+
+            if (!user) {
+                res.json({ success: false, message: 'Username not found' }); // Username not found in database
+            } else if (user) {
+                // Check if user does exist, then compare password provided by user
+                if (req.body.password) {
+                    var validPassword = user.comparePassword(req.body.password);
+                     // Password was not provided
+                } else {
+                    res.json({ success: false, message: 'No password provided' });
+                }
+                if (!validPassword) {
+                        res.json({ success: false, message: 'Could not authenticate password' }); // Password does not match password in database
+                }else if (user.active) {
+                    res.json({ success: false, message: 'Account is already activated!'});
+                }
+                else {
+                    res.json({ success: true, user: user });
+                }
+            }
+        });
+    });
+
+    router.put('/resend', function(req,res){
+        User.findOne({ username: req.body.username }).select('username email name prof_photo temporarytoken').exec(function(err,user){
+            if(err) throw err;
+
+            user.temporarytoken = jwt.sign({ username: user.username, email: user.email,name: user.name, prof_photo: user.prof_photo}, secret, { expiresIn: '24h' });
+            user.save(function(err){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    var email = {
+                      from: 'usermanagement1211@gmail.com',
+                      to: user.email,
+                      subject: 'User Management Activation Link Request',
+                      text: 'Hello, ' + user.name + 'You recently requested a new account activation link. Please click on the link below to complete your activation! http://localhost:3000/activate/'+ user.temporarytoken,
+                      html: 'Hello, <strong> ' + user.name + '</strong><br><br>You recently requested a new account activation link. Thank You for registering at usermanagement.herokuapp.com.Please click on the link below to complete your activation!<br><br><a href="http://localhost:3000/activate/' + user.temporarytoken +'">http://localhost:3000/activate</a> '
+                    };
+
+                    client.sendMail(email, function(err, info){
+                        if (err ){
+                          console.log(err);
+                        }
+                        else {
+                          console.log('Message sent: ' + info.response);
+                        }
+                    });
+
+                    res.json({ success: true, message: 'Activation Link has been sent to '+ user.email + '!' });
+                }
+            });
+        });
+    });
 
     // Middleware for Routes that checks for token - Place all routes after this route that require the user to already be logged in
     router.use(function(req, res, next) {

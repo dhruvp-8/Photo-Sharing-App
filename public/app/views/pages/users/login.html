@@ -18,13 +18,13 @@
 
 <div class="row show-hide-message" ng-show="main.errorMsg">
     <div class="alert alert-danger">
-        {{ main.errorMsg }}
+        {{ main.errorMsg }}&nbsp;&nbsp;<a href="/resend" ng-show="main.expired"><button type="button" class="btn btn-primary">Resend Activation Link</button></a>
     </div>
 </div>
 
 <div class="row show-hide-message" ng-show="facebook.errorMsg">
     <div class="alert alert-danger">
-        {{ facebook.errorMsg }}
+        {{ facebook.errorMsg }}&nbsp;&nbsp;<a href="/resend" ng-show="facebook.expired"><button type="button" class="btn btn-primary">Resend Activation Link</button></a>
     </div>
 </div>
 
@@ -41,7 +41,7 @@
     <div class="form-group">
         <label class="font-bold col-md-2 control-label">*Username:</label>
         <div class="col-md-4">
-            <input type="text" class="form-control" name="username" ng-model="main.loginData.username">
+            <input type="text" ng-disabled="main.disabled || facebook.disabled" class="form-control" name="username" ng-model="main.loginData.username">
         </div>
         <br><br><br>
     </div>
@@ -49,14 +49,14 @@
     <div class="form-group">
         <label class="font-bold col-md-2 control-label">*Password:</label>
         <div class="col-md-4">
-            <input type="password" class="form-control" name="password" ng-model="main.loginData.password">
+            <input type="password" ng-disabled="main.disabled || facebook.disabled" class="form-control" name="password" ng-model="main.loginData.password">
         </div>
         <br><br>
     </div>
     <div class="form-group">
         <div class="col-md-6">
-            <button type="submit" class="btn btn-group-justified btn-md btn-success">Sign In</button><br>
-            <button type="button" ng-click="main.facebook()" class="btn btn-facebook btn-group-justified btn-md btn-primary">Sign In with Facebook</button></a>
+            <button type="submit" class="btn btn-group-justified btn-md btn-success" ng-disabled="main.disabled || facebook.disabled">Sign In</button><br>
+            <button type="button" ng-click="main.facebook()" class="btn btn-facebook btn-group-justified btn-md btn-primary" ng-disabled="main.disabled || facebook.disabled">Sign In with Facebook</button></a>
         </div>
     </div>
 
