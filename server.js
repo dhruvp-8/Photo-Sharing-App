@@ -26,14 +26,28 @@ app.use(express.static(__dirname + '/public'));
 //Routes Middleware
 app.use('/api',appRoutes);
 
-mongoose.connect('mongodb://localhost:27017/photo-app', function(err){
-    if(err){
-        console.log('Not Connected to database: ' + err);
-    }
-    else {
-        console.log('Connected to MongoDB...');
-    }
-});
+var env = process.env.NODE_ENV = process.env.NODE_ENV || 'dev'
+if(env == 'dev'){
+    mongoose.connect('mongodb://localhost:27017/photo-app', function(err){
+        if(err){
+            console.log('Not Connected to database: ' + err);
+        }
+        else {
+            console.log('Connected to MongoDB...');
+        }
+    });
+}
+else{
+    mongoose.connect('mongodb://admin_usermanagement:dhruvpatel@ds137100.mlab.com:37100/usermanagement', function(err){
+        if(err){
+            console.log('Not Connected to database: ' + err);
+        }
+        else {
+            console.log('Connected to MongoDB...');
+        }
+    });
+}
+
 
 app.get('*', function(req, res){
     res.sendFile(path.join(__dirname + '/public/app/views/index.html'));
@@ -42,4 +56,3 @@ app.get('*', function(req, res){
 app.listen(port, function(){
     console.log('Server running at port ' + port);
 });
-

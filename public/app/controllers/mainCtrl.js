@@ -3,6 +3,7 @@ angular.module('mainController',['authServices','fileModelDirective','uploadFile
 .controller('mainCtrl', function(Auth,$timeout,$location,$rootScope,$window,$scope,uploadFile,$interval,$route,User,AuthToken){
     var app = this;
     app.loadme = false;
+
     //app.prof_photo = 'nothing';
     app.checkSession = function(){
         if(Auth.isLoggedIn()){
@@ -173,6 +174,7 @@ angular.module('mainController',['authServices','fileModelDirective','uploadFile
     };
 
     app.logout = function(){
+        app.disabled = false;
         showModal(2);
     };
 

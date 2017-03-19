@@ -7,7 +7,20 @@ main{
 }
 
 .showmore{
-    display: inline;   
+    display: inline;
+}
+
+#maker{
+    position: absolute;
+    top: 35%;
+    left: 47%;
+}
+
+#fixer{
+    position: absolute;
+    top: 53%;
+    left: 40%;
+    width: 20%;
 }
 
 .dizzy-gillespie {
