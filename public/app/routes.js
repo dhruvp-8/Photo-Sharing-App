@@ -121,6 +121,14 @@ var app = angular.module('appRoutes', ['ngRoute'])
         permission: ['admin','moderator']
     })
 
+    .when('/settings',{
+        templateUrl: 'app/views/pages/users/settings.html',
+        controller: 'mainCtrl',
+        controllerAs: 'main',
+        authenticated: true,
+        permission: ['admin','moderator']
+    })
+
     .otherwise({ redirectTo: '/' });
 
     $locationProvider.html5Mode({

@@ -36,7 +36,7 @@ if(env == 'dev'){
             console.log('Connected to MongoDB...');
         }
     });
-}
+    }
 else{
     mongoose.connect('mongodb://admin_usermanagement:dhruvpatel@ds137100.mlab.com:37100/usermanagement', function(err){
         if(err){

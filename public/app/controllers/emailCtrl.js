@@ -63,6 +63,7 @@ angular.module('emailController', ['userServices'])
                     }
                     else{
                         app.errorMsg = data.data.message;
+                        app.disabled = false;
                     }
                 });
             }
@@ -93,6 +94,7 @@ angular.module('emailController', ['userServices'])
                     }
                     else{
                         app.errorMsg = data.data.message;
+                        app.disabled = false;
                     }
                 });
             }
