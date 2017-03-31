@@ -50,7 +50,6 @@ module.exports = function(router) {
         user.email = req.body.email;
         user.name = req.body.name;
         user.temporarytoken = jwt.sign({ username: user.username, email: user.email,name: user.name, prof_photo: user.prof_photo}, secret, { expiresIn: '24h' });
-
         // Check if request is valid and not empty or null
         if (req.body.username === null || req.body.username === '' || req.body.password === null || req.body.password === '' || req.body.email === null || req.body.email === '' || req.body.name === null || req.body.name === '') {
             res.json({ success: false, message: 'Ensure username, email, and password were provided' });

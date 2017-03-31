@@ -129,6 +129,14 @@ var app = angular.module('appRoutes', ['ngRoute'])
         permission: ['admin','moderator']
     })
 
+    .when('/datastarter',{
+        templateUrl: 'app/views/pages/users/datastarter.html',
+        controller: 'dataCtrl',
+        controllerAs: 'stats',
+        authenticated: true,
+        permission: ['admin','moderator']
+    })
+
     .otherwise({ redirectTo: '/' });
 
     $locationProvider.html5Mode({

@@ -1,0 +1,148 @@
+<div class="page-header">
+    <h2 class="text-center">Administrator Home</h2>
+</div>
+
+
+<div class="container">
+	<div class="col-md-4">
+		<div id="users">
+			<label class="enlarge">{{ stats.totalUsers }}</label>
+			<label class="ital">Total Users</label>
+		 </div>
+	</div>
+	<div class="col-md-4">
+		<div id="visitors">
+			 <asp:Label ID="dVisitors" runat="server" CssClass="enlarge" Text="9"></asp:Label>
+			 <label class="ital">Total Visitors</label>
+		 </div>
+	</div>
+	<div class="col-md-4">
+		 <div id="TodayUsers">
+			 <asp:Label ID="tVisitors" runat="server" CssClass="enlarge" Text="6"></asp:Label>
+			 <label class="ital1">Featured Today</label>
+		 </div>
+	 </div>
+</div>
+<br><br><br>
+<div class="container">
+    <div class="col-md-6">
+				  <div class="panel panel-default">
+					<div class="panel-heading">Line Chart</div>
+					<div class="panel-body">
+						<div class="resize">
+							<canvas id="lineChart1" width="400" height="420"></canvas>
+						</div>
+					</div>
+				  </div>
+			  </div>
+              <div class="col-md-6">
+          				  <div class="panel panel-default">
+          					<div class="panel-heading">Line Chart</div>
+          					<div class="panel-body">
+          						<div class="resize">
+          							<canvas id="lineChart2" width="400" height="420"></canvas>
+          						</div>
+          					</div>
+          				  </div>
+          			  </div>
+			 <div class="col-md-6">
+				  <div class="panel panel-default">
+					<div class="panel-heading">Bar Chart</div>
+					<div class="panel-body">
+						<div class="resize">
+							<canvas id="barChart1" width="400" height="400"></canvas>
+						 </div>
+					</div>
+				  </div>
+			  </div>
+              <div class="col-md-6">
+ 				  <div class="panel panel-default">
+ 					<div class="panel-heading">Bar Chart</div>
+ 					<div class="panel-body">
+ 						<div class="resize">
+ 							<canvas id="barChart2" width="400" height="400"></canvas>
+ 						 </div>
+ 					</div>
+ 				  </div>
+ 			  </div>
+			 <div class="col-md-6">
+				  <div class="panel panel-default">
+					<div class="panel-heading">PolarArea Chart</div>
+					<div class="panel-body">
+						<div class="resize">
+							<canvas id="polarareaChart1" width="400" height="400"></canvas>
+						</div>
+					</div>
+				  </div>
+			  </div>
+              <div class="col-md-6">
+ 				  <div class="panel panel-default">
+ 					<div class="panel-heading">PolarArea Chart</div>
+ 					<div class="panel-body">
+ 						<div class="resize">
+ 							<canvas id="polarareaChart2" width="400" height="400"></canvas>
+ 						</div>
+ 					</div>
+ 				  </div>
+ 			  </div>
+			 <div class="col-md-6">
+				  <div class="panel panel-default">
+					<div class="panel-heading">Doughnut Chart</div>
+					<div class="panel-body">
+						<div class="resize">
+							<canvas id="doughnutChart1" width="400" height="400"></canvas>
+						</div>
+					</div>
+				  </div>
+			  </div>
+              <div class="col-md-6">
+ 				  <div class="panel panel-default">
+ 					<div class="panel-heading">Doughnut Chart</div>
+ 					<div class="panel-body">
+ 						<div class="resize">
+ 							<canvas id="doughnutChart2" width="400" height="400"></canvas>
+ 						</div>
+ 					</div>
+ 				  </div>
+ 			  </div>
+			 <div class="col-md-6">
+				  <div class="panel panel-default">
+					<div class="panel-heading">Pie Chart</div>
+					<div class="panel-body">
+						<div class="resize">
+							<canvas id="pieChart1" width="400" height="400"></canvas>
+						</div>
+					</div>
+				  </div>
+			  </div>
+              <div class="col-md-6">
+ 				  <div class="panel panel-default">
+ 					<div class="panel-heading">Pie Chart</div>
+ 					<div class="panel-body">
+ 						<div class="resize">
+ 							<canvas id="pieChart2" width="400" height="400"></canvas>
+ 						</div>
+ 					</div>
+ 				  </div>
+ 			  </div>
+			 <div class="col-md-6">
+				  <div class="panel panel-default">
+					<div class="panel-heading">Radar Chart</div>
+					<div class="panel-body">
+						<div class="resize">
+							<canvas id="radarChart1" width="400" height="400"></canvas>
+						 </div>
+					</div>
+				  </div>
+			  </div>
+              <div class="col-md-6">
+ 				  <div class="panel panel-default">
+ 					<div class="panel-heading">Radar Chart</div>
+ 					<div class="panel-body">
+ 						<div class="resize">
+ 							<canvas id="radarChart2" width="400" height="400"></canvas>
+ 						 </div>
+ 					</div>
+ 				  </div>
+ 			  </div>
+</div>

@@ -18,9 +18,12 @@
     <link href="https://fonts.googleapis.com/css?family=Slabo+13px" rel="stylesheet" />
 
 
+
     <script src="assets/js/angular.js"></script>
     <script src="assets/js/angular-route.js"></script>
     <script src="assets/js/angular-animate.js"></script>
+    <script src="assets/js/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.min.js"></script>
 
     <script src="app/app.js"></script>
     <script src="app/routes.js"></script>
@@ -28,6 +31,8 @@
     <script src="app/controllers/emailCtrl.js"></script>
     <script src="app/controllers/mainCtrl.js"></script>
     <script src="app/controllers/managementCtrl.js"></script>
+    <script src="app/controllers/dataCtrl.js"></script>
+
     <script src="app/services/userServices.js"></script>
     <script src="app/directives/fileModel.js"></script>
     <script src="app/services/uploadFileService.js"></script>
@@ -52,7 +57,8 @@
          </div>
          <div id="navbar" class="navbar-collapse collapse">
            <ul class="nav navbar-nav">
-             <li><a href="/">Home</a></li>
+             <li><a href="/" ng-show="!main.isLoggedIn">Starter</a></li>
+             <li><a href="/datastarter" ng-show="main.isLoggedIn && main.authorized">Home</a></li>
              <li><a href="/login" ng-show="!main.isLoggedIn">Login</a></li>
              <li><a href="/register" ng-show="!main.isLoggedIn">Register</a></li>
              <li><a href="/management" ng-show="main.isLoggedIn && main.authorized">Management</a></li>

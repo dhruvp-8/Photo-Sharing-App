@@ -207,3 +207,53 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+
+#users {
+		   width: 200px;
+		   height: 200px;
+		   background: #b200ff;
+	   }
+
+#visitors {
+	width: 200px;
+    height: 200px;
+    background: #ff006e;
+}
+
+#TodayUsers {
+    width: 200px;
+    height: 200px;
+    background: #0094ff;
+}
+
+.ital{
+	font-size: 24px;
+    color:#000;
+    position:absolute;
+    top: 120px;
+    left:45px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.ital1{
+    font-size: 24px;
+    color:#000;
+    position:absolute;
+    top: 120px;
+    left:31px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.enlarge{
+	font-size:72px;
+    color: #fff;
+	position:absolute;
+	top: 25px;
+	left: 90px;
+}
+
+.resize{
+  width: 350px;
+  height: 350px;
+}
